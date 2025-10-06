@@ -1,205 +1,207 @@
 :root {
-            --primary: #0A192F;    /* Navy blue */
-            --secondary: #64FFDA;  /* Electric teal accent */
-            --light: #F8F9FA;      /* Light background/text */
-            --dark: #495057;       /* Dark text */
-            --section-bg: #0a1429; /* New color for About, Projects, Footer */
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--light);
-            background-color: var(--primary);
-        }
-        
-        /* Navbar styling */
-        .navbar {
-            background-color: rgba(10, 25, 47, 0.95);
-            padding: 1rem 0;
-            transition: all 0.3s ease;
-        }
-        
-        .navbar-brand, .nav-link {
-            color: var(--light) !important;
-        }
-        
-        .nav-link {
-            margin: 0 0.5rem;
-            font-weight: 500;
-        }
-        
-        .nav-link:hover, .navbar-brand:hover {
-            color: var(--secondary) !important;
-        }
-        
-        /* Hero section styling */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            background: linear-gradient(to bottom, var(--primary), #030c1c);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-content {
-            z-index: 1;
-        }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-        
-        .typewriter {
-            color: var(--secondary);
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-        
-        .hero-btn {
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
-            padding: 0.8rem 1.8rem;
-            margin-right: 1rem;
-            border-radius: 4px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .hero-btn:hover {
-            background-color: rgba(100, 255, 218, 0.1);
-            transform: translateY(-3px);
-        }
-        
-        /* Section styling */
-        section {
-            padding: 5rem 0;
-        }
-        
-        .section-title {
-            position: relative;
-            margin-bottom: 3rem;
-            font-weight: 700;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--secondary);
-        }
-        
-        /* About section */
-        .about-img {
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            max-width: 50%;
-        }
-        
-        /* Shared background for About, Projects, Footer */
-        .bg-custom {
-            background-color: var(--section-bg);
-        }
-        
-        /* Skills section */
-        .skill-card {
-            background-color: rgba(100, 255, 218, 0.05);
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            border-radius: 5px;
-            padding: 1.5rem;
-            height: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        .skill-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--secondary);
-        }
-        
-        .skill-icon {
-            font-size: 2rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-        }
-        
-        /* Projects section */
-        .project-card {
-            background-color: rgba(100, 255, 218, 0.05);
-            border: 1px solid rgba(100, 255, 218, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
-            height: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--secondary);
-        }
-        
-        .project-card .card-body {
-            padding: 1.5rem;
-        }
-        
-        .project-btn {
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
-            padding: 0.5rem 1rem;
-            margin-right: 0.5rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-        
-        .project-btn:hover {
-            background-color: rgba(100, 255, 218, 0.1);
-        }
-        
-        /* Contact section */
-        .contact-icon {
-            font-size: 1.5rem;
-            color: var(--secondary);
-            margin-right: 1rem;
-        }
-        
-        .contact-link {
-            color: var(--light);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .contact-link:hover {
-            color: var(--secondary);
-            transform: translateX(5px);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--section-bg);
-            padding: 1.5rem 0;
-            text-align: center;
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .typewriter {
-                font-size: 1.3rem;
-            }
-            
-            section {
-                padding: 3rem 0;
-            }
-        }
+  --primary: #0a192f; /* Navy blue */
+  --secondary: #64ffda; /* Electric teal accent */
+  --light: #f8f9fa; /* Light background/text */
+  --dark: #495057; /* Dark text */
+  --section-bg: #0a1429; /* New color for About, Projects, Footer */
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--light);
+  background-color: var(--primary);
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: rgba(10, 25, 47, 0.95);
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-brand,
+.nav-link {
+  color: var(--light) !important;
+}
+
+.nav-link {
+  margin: 0 0.5rem;
+  font-weight: 500;
+}
+
+.nav-link:hover,
+.navbar-brand:hover {
+  color: var(--secondary) !important;
+}
+
+/* Hero section styling */
+.hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to bottom, var(--primary), #030c1c);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  z-index: 1;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.typewriter {
+  color: var(--secondary);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.hero-btn {
+  border: 1px solid var(--secondary);
+  color: var(--secondary);
+  padding: 0.8rem 1.8rem;
+  margin-right: 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+  background-color: rgba(100, 255, 218, 0.1);
+  transform: translateY(-3px);
+}
+
+/* Section styling */
+section {
+  padding: 5rem 0;
+}
+
+.section-title {
+  position: relative;
+  margin-bottom: 3rem;
+  font-weight: 700;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background-color: var(--secondary);
+}
+
+/* About section */
+.about-img {
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 75%;
+}
+
+/* Shared background for About, Projects, Footer */
+.bg-custom {
+  background-color: var(--section-bg);
+}
+
+/* Skills section */
+.skill-card {
+  background-color: rgba(100, 255, 218, 0.05);
+  border: 1px solid rgba(100, 255, 218, 0.1);
+  border-radius: 5px;
+  padding: 1.5rem;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.skill-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--secondary);
+}
+
+.skill-icon {
+  font-size: 2rem;
+  color: var(--secondary);
+  margin-bottom: 1rem;
+}
+
+/* Projects section */
+.project-card {
+  background-color: rgba(100, 255, 218, 0.05);
+  border: 1px solid rgba(100, 255, 218, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--secondary);
+}
+
+.project-card .card-body {
+  padding: 1.5rem;
+}
+
+.project-btn {
+  border: 1px solid var(--secondary);
+  color: var(--secondary);
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.project-btn:hover {
+  background-color: rgba(100, 255, 218, 0.1);
+}
+
+/* Contact section */
+.contact-icon {
+  font-size: 1.5rem;
+  color: var(--secondary);
+  margin-right: 1rem;
+}
+
+.contact-link {
+  color: var(--light);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.contact-link:hover {
+  color: var(--secondary);
+  transform: translateX(5px);
+}
+
+/* Footer */
+footer {
+  background-color: var(--section-bg);
+  padding: 1.5rem 0;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .typewriter {
+    font-size: 1.3rem;
+  }
+
+  section {
+    padding: 3rem 0;
+  }
+}
