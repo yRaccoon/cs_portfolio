@@ -101,7 +101,7 @@ section {
 .about-img {
   border-radius: 5px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  max-width: 75%;
+  max-width: 85%;
 }
 
 /* Shared background for About, Projects, Footer */
