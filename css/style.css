@@ -1,3 +1,5 @@
+/* style.css - FULL DESIGN VERSION */
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 10px;
@@ -16,7 +18,7 @@
     background: linear-gradient(180deg, #22d3ee, #3b82f6, #8b5cf6);
 }
 
-/* Aurora Background Layers */
+/* Aurora Background with All Blobs */
 .aurora-bg {
     position: fixed;
     top: 0;
@@ -66,9 +68,10 @@
 .grain-overlay {
     background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');
     pointer-events: none;
+    opacity: 0.03;
 }
 
-/* Glassmorphism Utilities */
+/* Glassmorphism */
 .glass {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(20px);
@@ -91,7 +94,7 @@
     box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.5);
 }
 
-/* Project Cards */
+/* Project Cards with Glow Effect */
 .project-card {
     position: relative;
     overflow: hidden;
@@ -112,7 +115,7 @@
     left: 100%;
 }
 
-/* Hidden Projects */
+/* Hidden Projects Animation */
 .hidden-project {
     opacity: 0;
     transform: translateY(20px);
@@ -185,20 +188,8 @@
     border: 1px solid rgba(53, 114, 165, 0.3);
 }
 
-.tech-tag.next {
-    background: rgba(0, 0, 0, 0.15);
-    color: #000;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-}
-
-.tech-tag.sql {
-    background: rgba(0, 84, 120, 0.15);
-    color: #005478;
-    border: 1px solid rgba(0, 84, 120, 0.3);
-}
-
-.tech-tag.tailwind,
-.tech-tag.css {
+.tech-tag.css,
+.tech-tag.tailwind {
     background: rgba(6, 182, 212, 0.15);
     color: #06b6d4;
     border: 1px solid rgba(6, 182, 212, 0.3);
@@ -227,90 +218,39 @@
     color: rgba(255, 255, 255, 0.4);
 }
 
-/* Profile Image Styling */
-.profile-image-container {
-    position: relative;
-    width: 320px;
-    height: 320px;
-    margin: 0 auto;
-}
-
-.profile-image-container::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    background: linear-gradient(45deg, #4ade80, #60a5fa, #c084fc);
-    border-radius: 24px;
-    z-index: -1;
-    animation: rotate 10s linear infinite;
-}
-
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
 /* Animations */
 @keyframes aurora {
     0% {
         transform: translate(0%, 0%) rotate(0deg) scale(1);
     }
-
     33% {
         transform: translate(10%, -8%) rotate(10deg) scale(1.1);
     }
-
     66% {
         transform: translate(-5%, 12%) rotate(-8deg) scale(0.95);
     }
-
     100% {
         transform: translate(8%, -5%) rotate(5deg) scale(1.05);
     }
 }
 
 @keyframes float {
-
-    0%,
-    100% {
+    0%, 100% {
         transform: translateY(0) rotate(0deg);
     }
-
     50% {
         transform: translateY(-25px) rotate(2deg);
     }
 }
 
 @keyframes blink {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 @keyframes bounce {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-5px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 
 .animate-cursor-blink {
@@ -325,20 +265,20 @@
     animation: bounce 0.5s ease-in-out infinite;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .glass-card {
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-    }
+/* Fade-in animation */
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
+}
 
-    .aurora-blob {
-        filter: blur(60px);
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
-
-    .profile-image-container {
-        width: 250px;
-        height: 250px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -350,7 +290,7 @@
     top: 0;
     left: 0;
     z-index: 9999;
-    animation: loading 2s ease-in-out infinite;
+    animation: loading 2s ease-in-out;
 }
 
 @keyframes loading {
@@ -358,32 +298,372 @@
         width: 0%;
         left: 0;
     }
-
     50% {
         width: 100%;
         left: 0;
     }
-
     100% {
         width: 0%;
         left: 100%;
     }
 }
 
-/* Fade-in animation for elements */
-.animate-fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
-    opacity: 0;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .glass-card {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .aurora-blob {
+        filter: blur(60px);
+    }
 }
 
-@keyframes fadeIn {
+/* Load More Button Animation Styles */
+@keyframes slideUpFade {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes projectReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(-5px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 20px 10px rgba(74, 222, 128, 0.2);
+    }
+}
+
+@keyframes buttonClick {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Project Reveal Animation */
+.project-reveal {
+    animation: projectReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Button Click Animation */
+.button-click {
+    animation: buttonClick 0.3s ease;
+}
+
+/* Pulse Glow Effect */
+.pulse-glow {
+    animation: pulseGlow 2s infinite;
+}
+
+/* Loading Bar Animation for Load More */
+.load-more-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.load-more-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.2), transparent);
+    animation: loadingShimmer 1.5s infinite;
+}
+
+@keyframes loadingShimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Highlight effect for newly loaded projects */
+.highlight-new {
+    position: relative;
+    z-index: 10;
+}
+
+.highlight-new::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        rgba(74, 222, 128, 0.3), 
+        rgba(96, 165, 250, 0.3), 
+        rgba(192, 132, 252, 0.3));
+    border-radius: 24px;
+    z-index: -1;
+    animation: highlightPulse 2s ease-in-out;
+}
+
+@keyframes highlightPulse {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
+    }
+}
+
+/* New project indicator */
+.new-project-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: linear-gradient(135deg, #4ade80, #60a5fa);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    z-index: 20;
+    animation: badgePop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+}
+
+@keyframes badgePop {
+    0% {
+        transform: scale(0) rotate(0deg);
+    }
+    70% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* About Section Optimizations */
+#about {
+    scroll-margin-top: 80px; /* For smooth scroll to account for fixed navbar */
+}
+
+/* Profile Image Hover Effect */
+#about img {
+    transition: transform 0.5s ease;
+}
+
+#about img:hover {
+    transform: scale(1.05);
+}
+
+/* Reduce spacing in mobile */
+@media (max-width: 768px) {
+    #about .glass-card {
+        padding: 1.5rem;
+    }
+    
+    #about h2 {
+        margin-bottom: 2rem;
+    }
+    
+    #about .grid {
+        gap: 2rem;
+    }
+}
+
+/* Animation for Quick Facts */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+#about li {
+    animation: slideInLeft 0.5s ease forwards;
+    opacity: 0;
+}
+
+/* Stagger animation for list items */
+#about li:nth-child(1) { animation-delay: 0.1s; }
+#about li:nth-child(2) { animation-delay: 0.2s; }
+#about li:nth-child(3) { animation-delay: 0.3s; }
+#about li:nth-child(4) { animation-delay: 0.4s; }
+#about li:nth-child(5) { animation-delay: 0.5s; }
+#about li:nth-child(6) { animation-delay: 0.6s; }
+
+/* Compact layout for smaller screens */
+@media (max-width: 640px) {
+    #about {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+    
+    #about h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    #about .glass-card {
+        padding: 1.25rem;
+        border-radius: 1rem;
+    }
+    
+    #about .profile-image-container {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto 1.5rem;
+    }
+    
+    #about p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    #about .quick-facts {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+    #about .glass-card {
+        padding: 2rem;
+    }
+    
+    #about .grid {
+        gap: 3rem;
+    }
+    
+    #about .profile-image-container {
+        width: 280px;
+        height: 280px;
+    }
+}
+
+/* About Section Optimizations */
+#about img {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#about img:hover {
+    transform: scale(1.08);
+}
+
+/* Compact mobile layout */
+@media (max-width: 768px) {
+    #about {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+    
+    #about .glass-card {
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+    
+    #about h2 {
+        margin-bottom: 2rem;
+        font-size: 2rem;
+    }
+    
+    #about .grid {
+        gap: 2rem;
+    }
+    
+    #about h3 {
+        font-size: 1.5rem;
+    }
+    
+    #about p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+}
+
+/* Staggered animations for Quick Facts */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#about li {
+    animation: slideInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+/* Performance optimizations */
+#about img {
+    will-change: transform;
+}
+
+/* Smooth scroll padding */
+#about {
+    scroll-margin-top: 5rem;
+}
+
+/* Loading optimization */
+#about img {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
     }
 }

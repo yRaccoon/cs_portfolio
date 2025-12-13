@@ -154,7 +154,7 @@
                     </a>
                     <a href="assets/cs_resume.pdf"
                         class="px-8 py-3 border border-teal-400 text-teal-400 hover:bg-teal-400/10 font-medium rounded-full transition-all flex items-center gap-2 group"
-                        id="download-resume" download="Clarence_Sy_Resume.pdf">
+                        id="download-resume">
                         <i data-lucide="download" class="w-5 h-5 group-hover:animate-bounce"></i>
                         Download Resume
                     </a>
@@ -243,77 +243,104 @@
     </div>
 
     <!-- About Section with Image -->
-    <section id="about" class="py-24 relative">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center">
+    <section id="about" class="py-16 md:py-24 relative">
+        <div class="container mx-auto px-4 md:px-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-10 md:mb-16 text-center">
                 About <span class="text-teal-400">Me</span>
             </h2>
 
-            <div class="glass-card rounded-3xl p-8 md:p-12">
-                <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="glass-card rounded-xl md:rounded-2xl p-6 md:p-8 lg:p-12">
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                     <!-- Profile Image -->
-                    <div class="relative">
-                        <div
-                            class="w-64 md:w-80 mx-auto rounded-2xl overflow-hidden border-4 border-teal-500/30 shadow-2xl shadow-teal-500/20 relative aspect-[3/4]">
-                            <img src="assets/cs_picture.png" alt="Clarence Sioson"
-                                class="w-full h-full object-cover object-center" />
+                    <div class="order-2 md:order-1">
+                        <div class="relative max-w-sm mx-auto">
+                            <div
+                                class="rounded-xl md:rounded-2xl overflow-hidden border-4 border-teal-500/30 shadow-2xl shadow-teal-500/20 relative aspect-square md:aspect-[3/4]">
+                                <img src="assets/cs_picture.png" alt="Clarence Sioson"
+                                    class="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105"
+                                    loading="lazy" />
+                            </div>
+                            <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-teal-500/10 rounded-full blur-xl">
+                            </div>
                         </div>
-                        <div class="absolute -top-4 -right-4 w-24 h-24 bg-purple-500/20 rounded-full blur-xl"></div>
-                        <div class="absolute -bottom-4 -left-4 w-20 h-20 bg-blue-500/20 rounded-full blur-xl"></div>
                     </div>
 
                     <!-- About Content -->
-                    <div class="space-y-6">
-                        <h3 class="text-2xl font-bold">Hi there! 👋</h3>
-                        <p class="text-slate-300 leading-relaxed">
-                            I'm
-                            <span class="text-teal-400 font-semibold">Clarence Sioson</span>, a passionate Computer
-                            Engineering student and software
-                            developer based in the Philippines. With over 2 years of
-                            hands-on experience, I specialize in building intelligent and
-                            data-driven applications that solve real-world problems.
-                        </p>
+                    <div class="order-1 md:order-2 space-y-4 md:space-y-6">
+                        <h3 class="text-xl md:text-2xl font-bold">Hi there! 👋</h3>
+                        <div class="space-y-3 md:space-y-4">
+                            <p class="text-slate-300 leading-relaxed">
+                                I'm <span class="text-teal-400 font-semibold">Clarence Sioson</span>, a Computer
+                                Engineering student
+                                and software developer from the Philippines with 2+ years of experience building
+                                <span class="text-blue-300">software developing</span> and <span
+                                    class="text-purple-300">hardware-software integrations</span>.
+                            </p>
 
-                        <p class="text-slate-300 leading-relaxed">
-                            My journey in technology began with simple HTML/CSS projects and
-                            gradually expanded into advanced systems involving computer
-                            vision, analytics, and embedded development. I’ve built
-                            applications using Flask and OpenCV—most notably a skin disease
-                            detection system—and developed Southeast Asia COVID-19 analytics
-                            using Pandas for meaningful data insights. I also work with
-                            Arduino to prototype hardware solutions and IoT concepts.
-                        </p>
+                            <p class="text-slate-300 leading-relaxed">
+                                My projects showcase diverse technical skills:
+                                <span class="text-green-300">Web Development</span> (HTML,CSS,JavaScript),
+                                <span class="text-blue-300">Data Analytics</span> (COVID-19 dashboard using Pandas and
+                                Power BI),
+                                <span class="text-yellow-300">Computer Vision</span> (SkinCheck disease detector with
+                                YOLOv8/Flask),
+                                <span class="text-orange-300">Hardware Integration</span> (Arduino DHT11 to C# serial
+                                monitor), and
+                                <span class="text-purple-300">GUI applications</span> (PDF merger using python and
+                                CustomTkinter).
+                            </p>
 
-                        <p class="text-slate-300 leading-relaxed">
-                            When I’m not coding, I’m exploring new tools in AI, improving my
-                            data engineering workflow, or experimenting with hardware
-                            projects. I’m currently seeking internship opportunities where I
-                            can apply my skills, contribute to impactful projects, and
-                            continue learning from experienced professionals.
-                        </p>
+                            <p class="text-slate-300 leading-relaxed">
+                                I'm passionate about creating <span class="text-teal-300">practical solutions</span>
+                                that bridge software and hardware.
+                                Currently seeking <span class="text-teal-400 font-semibold">2025 internship
+                                    opportunities</span> to contribute to
+                                impactful projects while expanding my professional experience.
+                            </p>
+                        </div>
 
-                        <div class="pt-4">
+                        <div class="pt-4 md:pt-6">
                             <h4 class="text-lg font-bold mb-3 text-teal-400">
                                 Quick Facts:
                             </h4>
-                            <ul class="grid grid-cols-2 gap-3">
-                                <li class="flex items-center gap-2">
-                                    <i data-lucide="map-pin" class="w-4 h-4 text-blue-400"></i>
-                                    <span class="text-slate-300">Based in Philippines</span>
+                            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <li class="flex items-center gap-2 animate-fade-in" style="animation-delay: 0.1s">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
+                                    <span class="text-slate-300 text-sm md:text-base">Based in Philippines</span>
                                 </li>
-                                <li class="flex items-center gap-2">
-                                    <i data-lucide="graduation-cap" class="w-4 h-4 text-purple-400"></i>
-                                    <span class="text-slate-300">Computer Engineering Student</span>
+                                <li class="flex items-center gap-2 animate-fade-in" style="animation-delay: 0.2s">
+                                    <i data-lucide="graduation-cap" class="w-4 h-4 text-purple-400 flex-shrink-0"></i>
+                                    <span class="text-slate-300 text-sm md:text-base">Computer Engineering
+                                        Student</span>
                                 </li>
-                                <li class="flex items-center gap-2">
-                                    <i data-lucide="code" class="w-4 h-4 text-teal-400"></i>
-                                    <span class="text-slate-300">Software Developer</span>
+                                <li class="flex items-center gap-2 animate-fade-in" style="animation-delay: 0.3s">
+                                    <i data-lucide="code" class="w-4 h-4 text-teal-400 flex-shrink-0"></i>
+                                    <span class="text-slate-300 text-sm md:text-base">Software Developer</span>
                                 </li>
-                                <li class="flex items-center gap-2">
-                                    <i data-lucide="heart" class="w-4 h-4 text-pink-400"></i>
-                                    <span class="text-slate-300">Friendly</span>
+                                <li class="flex items-center gap-2 animate-fade-in" style="animation-delay: 0.4s">
+                                    <i data-lucide="calendar" class="w-4 h-4 text-pink-400 flex-shrink-0"></i>
+                                    <span class="text-slate-300 text-sm md:text-base">Available for 2025
+                                        Internships</span>
                                 </li>
                             </ul>
+                        </div>
+
+                        <!-- Skills Preview -->
+                        <div class="pt-4">
+                            <h4 class="text-lg font-bold mb-3 text-blue-400">
+                                Current Focus:
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    class="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-sm border border-blue-500/20">Web
+                                    Development</span>
+                                <span
+                                    class="px-3 py-1 bg-teal-500/10 text-teal-400 rounded-full text-sm border border-teal-500/20">Data
+                                    Analytics</span>
+                                <span
+                                    class="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm border border-purple-500/20">Embedded
+                                    Systems</span>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -2,16 +2,111 @@
 lucide.createIcons();
 
 // DOM Elements
-const navbar = document.getElementById('navbar');
-const mobileBtn = document.getElementById('mobile-menu-btn');
-const mobileMenu = document.getElementById('mobile-menu');
-const mobileLinks = document.querySelectorAll('.mobile-link');
-const loadMoreBtn = document.getElementById('load-more');
-const contactForm = document.getElementById('contact-form');
-const downloadResumeBtn = document.getElementById('download-resume');
+const DOM = {
+    navbar: document.getElementById('navbar'),
+    mobileBtn: document.getElementById('mobile-menu-btn'),
+    mobileMenu: document.getElementById('mobile-menu'),
+    loadMoreBtn: document.getElementById('load-more'),
+    contactForm: document.querySelector('contact-form'),
+    downloadResumeBtn: document.getElementById('download-resume'),
+    typewriterElement: document.getElementById('typewriter')
+};
 
-// Resume file path
+// Constants
 const RESUME_PATH = 'assets/cs_resume.pdf';
+const PROJECTS_PER_LOAD = 3;
+let projectsLoaded = 3;
+
+// Typewriter Effect
+class Typewriter {
+    constructor(el, phrases, delay = 1500) {
+        this.el = el;
+        this.phrases = phrases;
+        this.delay = delay;
+        this.currentPhrase = 0;
+        this.currentChar = 0;
+        this.isDeleting = false;
+        this.timeout = null;
+        this.isRunning = true;
+        
+        this.type();
+    }
+
+    type() {
+        if (!this.isRunning || !this.el) return;
+        
+        const fullText = this.phrases[this.currentPhrase];
+        
+        if (this.isDeleting) {
+            // Delete one character
+            this.el.textContent = fullText.substring(0, this.currentChar - 1);
+            this.currentChar--;
+        } else {
+            // Add one character
+            this.el.textContent = fullText.substring(0, this.currentChar + 1);
+            this.currentChar++;
+        }
+
+        let typeSpeed = this.isDeleting ? 50 : 100;
+
+        // If we've reached the end of the current phrase
+        if (!this.isDeleting && this.currentChar === fullText.length) {
+            typeSpeed = this.delay; // Pause at full phrase
+            this.isDeleting = true;
+        } 
+        // If we've deleted everything
+        else if (this.isDeleting && this.currentChar === 0) {
+            this.isDeleting = false;
+            this.currentPhrase = (this.currentPhrase + 1) % this.phrases.length;
+            typeSpeed = 500; // Pause before starting next phrase
+        }
+
+        this.timeout = setTimeout(() => this.type(), typeSpeed);
+    }
+
+    destroy() {
+        this.isRunning = false;
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+    }
+}
+
+// Initialize on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    let typewriter;
+    if (DOM.typewriterElement) {
+        typewriter = new Typewriter(DOM.typewriterElement, [
+            "Web Developer",
+            "Software Developer", 
+            "Computer Engineering Student",
+            "UI/UX Enthusiast",
+            "Problem Solver",
+            "Tech Innovator"
+        ], 1500);
+    }
+    
+    // Project hover effects
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-10px)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Initialize observers
+    initializeEventListeners();
+    
+    // Cleanup when page unloads
+    window.addEventListener('beforeunload', () => {
+        if (typewriter) typewriter.destroy();
+        observer.disconnect();
+    });
+});
 
 // Loading Animation
 function showLoadingAnimation() {
@@ -24,45 +119,50 @@ function showLoadingAnimation() {
     }, 2000);
 }
 
-// Navbar Scroll Effect
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('glass', 'shadow-lg', 'border-white/10');
-        navbar.classList.remove('border-transparent');
-    } else {
-        navbar.classList.remove('glass', 'shadow-lg', 'border-white/10');
-        navbar.classList.add('border-transparent');
-    }
-});
-
-// Mobile Menu Toggle
-mobileBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-    const icon = mobileBtn.querySelector('i');
-    if (mobileMenu.classList.contains('hidden')) {
-        icon.setAttribute('data-lucide', 'menu');
-    } else {
-        icon.setAttribute('data-lucide', 'x');
-    }
-    lucide.createIcons();
-});
-
-mobileLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-        mobileBtn.querySelector('i').setAttribute('data-lucide', 'menu');
-        lucide.createIcons();
-    });
-});
-
-// Smooth Scrolling for Anchor Links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
+// Initialize all event listeners
+function initializeEventListeners() {
+    // Navbar Scroll Effect with Throttle
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (scrollTimeout) return;
         
-        const targetElement = document.querySelector(targetId);
+        scrollTimeout = setTimeout(() => {
+            if (window.scrollY > 50) {
+                DOM.navbar.classList.add('glass', 'shadow-lg', 'border-white/10');
+                DOM.navbar.classList.remove('border-transparent');
+            } else {
+                DOM.navbar.classList.remove('glass', 'shadow-lg', 'border-white/10');
+                DOM.navbar.classList.add('border-transparent');
+            }
+            scrollTimeout = null;
+        }, 100);
+    });
+
+    // Mobile Menu Toggle
+    if (DOM.mobileBtn && DOM.mobileMenu) {
+        DOM.mobileBtn.addEventListener('click', () => {
+            DOM.mobileMenu.classList.toggle('hidden');
+            const icon = DOM.mobileBtn.querySelector('i');
+            icon.setAttribute('data-lucide', DOM.mobileMenu.classList.contains('hidden') ? 'menu' : 'x');
+            lucide.createIcons();
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                DOM.mobileMenu.classList.add('hidden');
+                DOM.mobileBtn.querySelector('i').setAttribute('data-lucide', 'menu');
+                lucide.createIcons();
+            });
+        });
+    }
+
+    // Smooth Scrolling
+    document.addEventListener('click', (e) => {
+        const anchor = e.target.closest('a[href^="#"]');
+        if (!anchor || anchor.getAttribute('href') === '#') return;
+        
+        e.preventDefault();
+        const targetElement = document.querySelector(anchor.getAttribute('href'));
         if (targetElement) {
             window.scrollTo({
                 top: targetElement.offsetTop - 80,
@@ -70,295 +170,256 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             });
         }
     });
-});
 
-// Typewriter Effect
-class Typewriter {
-    constructor(el, toRotate, period) {
-        this.toRotate = toRotate;
-        this.el = el;
-        this.loopNum = 0;
-        this.period = parseInt(period, 10) || 2000;
-        this.txt = '';
-        this.tick();
-        this.isDeleting = false;
-    }
-
-    tick() {
-        const i = this.loopNum % this.toRotate.length;
-        const fullTxt = this.toRotate[i];
-
-        if (this.isDeleting) {
-            this.txt = fullTxt.substring(0, this.txt.length - 1);
-        } else {
-            this.txt = fullTxt.substring(0, this.txt.length + 1);
-        }
-
-        this.el.textContent = this.txt;
-
-        let delta = 150 - Math.random() * 100;
-
-        if (this.isDeleting) {
-            delta /= 2;
-        }
-
-        if (!this.isDeleting && this.txt === fullTxt) {
-            delta = this.period;
-            this.isDeleting = true;
-        } else if (this.isDeleting && this.txt === '') {
-            this.isDeleting = false;
-            this.loopNum++;
-            delta = 500;
-        }
-
-        setTimeout(() => this.tick(), delta);
-    }
-}
-
-// Initialize Typewriter
-document.addEventListener('DOMContentLoaded', () => {
-    const typewriterElement = document.getElementById('typewriter');
-    const toRotate = [
-        "Web Developer",
-        "Software Developer",
-        "Computer Engineering Student",
-        "UI/UX Enthusiast",
-        "Problem Solver",
-        "Tech Innovator"
-    ];
-    
-    if (typewriterElement) {
-        new Typewriter(typewriterElement, toRotate, 2000);
-    }
-
-    // Add hover effect to project cards
-    document.querySelectorAll('.project-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-10px)';
-        });
+    // Load More Projects with Enhanced Animations
+    if (DOM.loadMoreBtn) {
+        const hiddenProjects = Array.from(document.querySelectorAll('.hidden-project'));
         
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0)';
-        });
-    });
-});
-
-// Load More Projects - Show 2 hidden projects
-if (loadMoreBtn) {
-    let projectsLoaded = 3; // Initially showing 3 projects
-    const hiddenProjects = document.querySelectorAll('.hidden-project');
-    let projectsToShow = 2; // Show 2 more projects when clicked
-    
-    loadMoreBtn.addEventListener('click', () => {
-        showLoadingAnimation();
-        
-        // Simulate loading
-        setTimeout(() => {
-            // Show next 2 hidden projects
-            for (let i = projectsLoaded; i < projectsLoaded + projectsToShow; i++) {
-                if (hiddenProjects[i - 3]) {
-                    hiddenProjects[i - 3].classList.remove('hidden');
-                    hiddenProjects[i - 3].classList.add('show');
-                }
+        // Create ripple effect
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+            
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+            circle.classList.add("ripple");
+            
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) {
+                ripple.remove();
             }
             
-            projectsLoaded += projectsToShow;
-            
-            // Update button text or hide if all projects are shown
-            if (projectsLoaded >= hiddenProjects.length + 3) {
-                loadMoreBtn.innerHTML = `
+            button.appendChild(circle);
+        }
+        
+        const updateButtonText = () => {
+            const remaining = hiddenProjects.length - (projectsLoaded - 3);
+            if (remaining <= 0) {
+                DOM.loadMoreBtn.innerHTML = `
                     <span>All Projects Loaded</span>
                     <i data-lucide="check" class="w-5 h-5"></i>
                 `;
-                loadMoreBtn.disabled = true;
-                loadMoreBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                DOM.loadMoreBtn.disabled = true;
+                DOM.loadMoreBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                DOM.loadMoreBtn.classList.remove('pulse-glow');
             } else {
-                loadMoreBtn.innerHTML = `
-                    <span>Load More Projects (${hiddenProjects.length + 3 - projectsLoaded} remaining)</span>
+                DOM.loadMoreBtn.innerHTML = `
+                    <span>Load More Projects (${remaining} remaining)</span>
                     <i data-lucide="chevron-down" class="w-5 h-5 group-hover:animate-bounce"></i>
                 `;
+                // Add subtle pulse animation to button
+                DOM.loadMoreBtn.classList.add('pulse-glow');
             }
-            
-            // Re-initialize icons
             lucide.createIcons();
-            
-            // Scroll to newly loaded projects
-            if (projectsLoaded > 3) {
-                const lastLoadedProject = document.querySelector('.hidden-project.show:last-child');
-                if (lastLoadedProject) {
-                    lastLoadedProject.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-            }
-        }, 1000);
-    });
-    
-    // Initialize button text
-    loadMoreBtn.innerHTML = `
-        <span>Load More Projects (${hiddenProjects.length} remaining)</span>
-        <i data-lucide="chevron-down" class="w-5 h-5 group-hover:animate-bounce"></i>
-    `;
-}
+        };
 
-// Download Resume Button
-if (downloadResumeBtn) {
-    downloadResumeBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        // Show loading animation
-        const originalText = downloadResumeBtn.innerHTML;
-        downloadResumeBtn.innerHTML = `
-            <i data-lucide="loader" class="w-5 h-5 animate-spin"></i>
-            Downloading...
-        `;
-        downloadResumeBtn.disabled = true;
-        
-        // Create a temporary link to trigger download
-        const link = document.createElement('a');
-        link.href = RESUME_PATH;
-        link.download = 'cs_resume.pdf';
-        
-        // Append to body, click, and remove
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // Check if the file exists
-        fetch(RESUME_PATH)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Resume file not found');
-                }
+        // Add click animation to button
+        DOM.loadMoreBtn.addEventListener('click', function(e) {
+            createRipple(e);
+            
+            // Button click animation
+            DOM.loadMoreBtn.classList.add('button-click');
+            setTimeout(() => {
+                DOM.loadMoreBtn.classList.remove('button-click');
+            }, 300);
+            
+            // Add loading state
+            const originalHTML = DOM.loadMoreBtn.innerHTML;
+            DOM.loadMoreBtn.innerHTML = `
+                <i data-lucide="loader" class="w-5 h-5 animate-spin"></i>
+                Loading Projects...
+            `;
+            DOM.loadMoreBtn.disabled = true;
+            DOM.loadMoreBtn.classList.add('load-more-loading');
+            
+            // Show loading animation
+            showLoadingAnimation();
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                const toShow = hiddenProjects.slice(projectsLoaded - 3, projectsLoaded - 3 + PROJECTS_PER_LOAD);
                 
-                // Show success message
-                downloadResumeBtn.innerHTML = `
+                // Animate each project sequentially
+                toShow.forEach((project, index) => {
+                    setTimeout(() => {
+                        project.classList.remove('hidden');
+                        project.classList.add('show', 'project-reveal');
+                        
+                        // Add subtle stagger effect
+                        project.style.animationDelay = `${index * 0.1}s`;
+                        
+                        // Add a subtle glow effect on reveal
+                        const cardContent = project.querySelector('.glass-card');
+                        if (cardContent) {
+                            cardContent.style.boxShadow = '0 0 30px rgba(74, 222, 128, 0.3)';
+                            setTimeout(() => {
+                                cardContent.style.boxShadow = '';
+                            }, 1000);
+                        }
+                    }, index * 150);
+                });
+                
+                projectsLoaded += toShow.length;
+                updateButtonText();
+                
+                // Remove loading state
+                DOM.loadMoreBtn.classList.remove('load-more-loading');
+                
+                // Scroll to newly loaded projects with delay
+                if (toShow.length > 0) {
+                    setTimeout(() => {
+                        toShow[toShow.length - 1].scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'nearest',
+                            inline: 'nearest'
+                        });
+                        
+                        // Add a subtle highlight effect to the last project
+                        toShow[toShow.length - 1].classList.add('highlight-new');
+                        setTimeout(() => {
+                            toShow[toShow.length - 1].classList.remove('highlight-new');
+                        }, 2000);
+                    }, toShow.length * 150 + 300);
+                }
+            }, 1200);
+        });
+        
+        // Add hover effect to button
+        DOM.loadMoreBtn.addEventListener('mouseenter', () => {
+            if (!DOM.loadMoreBtn.disabled) {
+                DOM.loadMoreBtn.style.transform = 'translateY(-2px)';
+                DOM.loadMoreBtn.style.boxShadow = '0 10px 25px rgba(74, 222, 128, 0.3)';
+            }
+        });
+        
+        DOM.loadMoreBtn.addEventListener('mouseleave', () => {
+            if (!DOM.loadMoreBtn.disabled) {
+                DOM.loadMoreBtn.style.transform = 'translateY(0)';
+                DOM.loadMoreBtn.style.boxShadow = '';
+            }
+        });
+        
+        updateButtonText();
+    }
+
+    // Download Resume
+    if (DOM.downloadResumeBtn) {
+        DOM.downloadResumeBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            const originalHTML = DOM.downloadResumeBtn.innerHTML;
+            DOM.downloadResumeBtn.innerHTML = `
+                <i data-lucide="loader" class="w-5 h-5 animate-spin"></i>
+                Downloading...
+            `;
+            DOM.downloadResumeBtn.disabled = true;
+            
+            try {
+                // Check if file exists
+                const response = await fetch(RESUME_PATH);
+                if (!response.ok) throw new Error('File not found');
+                
+                // Trigger download
+                const link = document.createElement('a');
+                link.href = RESUME_PATH;
+                link.download = 'Clarence_Sioson_Resume.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Success state
+                DOM.downloadResumeBtn.innerHTML = `
                     <i data-lucide="check" class="w-5 h-5"></i>
                     Resume Downloaded!
                 `;
                 
-                // Reset button after 3 seconds
                 setTimeout(() => {
-                    downloadResumeBtn.innerHTML = originalText;
-                    downloadResumeBtn.disabled = false;
+                    DOM.downloadResumeBtn.innerHTML = originalHTML;
+                    DOM.downloadResumeBtn.disabled = false;
                     lucide.createIcons();
-                }, 3000);
-            })
-            .catch(error => {
-                console.error('Error downloading resume:', error);
+                }, 2000);
                 
-                // Show error message
-                downloadResumeBtn.innerHTML = `
+            } catch (error) {
+                console.error('Download error:', error);
+                DOM.downloadResumeBtn.innerHTML = `
                     <i data-lucide="alert-circle" class="w-5 h-5"></i>
                     File Not Found
                 `;
-                downloadResumeBtn.classList.add('text-red-400');
+                DOM.downloadResumeBtn.classList.add('text-red-400');
                 
-                // Reset button after 3 seconds
                 setTimeout(() => {
-                    downloadResumeBtn.innerHTML = originalText;
-                    downloadResumeBtn.disabled = false;
-                    downloadResumeBtn.classList.remove('text-red-400');
+                    DOM.downloadResumeBtn.innerHTML = originalHTML;
+                    DOM.downloadResumeBtn.disabled = false;
+                    DOM.downloadResumeBtn.classList.remove('text-red-400');
                     lucide.createIcons();
-                }, 3000);
+                }, 2000);
                 
-                // Show alert to user
                 alert('Resume file not found. Please try again later.');
-            });
-    });
-}
+            }
+        });
+    }
 
-// Contact Form Handler
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const subject = document.getElementById('subject').value;
-        const message = document.getElementById('message').value;
-        
-        // Simple validation
-        if (!name || !email || !message) {
-            alert('Please fill in all required fields');
-            return;
-        }
-        
-        // Email validation
+    // Contact Form
+    if (DOM.contactForm) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert('Please enter a valid email address');
-            return;
-        }
         
-        // Show success message
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        
-        submitBtn.textContent = 'Sending...';
-        submitBtn.disabled = true;
-        
-        // Simulate sending (in a real application, this would send to a server)
-        setTimeout(() => {
-            submitBtn.textContent = 'Message Sent!';
-            submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        DOM.contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
             
-            // Log the form data (for demo purposes)
-            console.log('Contact Form Submission:', {
-                name,
-                email,
-                subject,
-                message,
-                timestamp: new Date().toISOString()
-            });
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
             
-            // Reset form
-            contactForm.reset();
+            // Validation
+            if (!name || !email || !message) {
+                alert('Please fill in all required fields');
+                return;
+            }
             
-            // Reset button after 3 seconds
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            const submitBtn = DOM.contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            
+            // Simulate sending
             setTimeout(() => {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                submitBtn.style.background = 'linear-gradient(135deg, #4ade80, #60a5fa)';
-            }, 3000);
-        }, 1500);
-    });
-}
+                console.log('Contact Form Submission:', {
+                    name, email, subject, message,
+                    timestamp: new Date().toISOString()
+                });
+                
+                submitBtn.textContent = 'Message Sent!';
+                submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                DOM.contactForm.reset();
+                
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = 'linear-gradient(135deg, #4ade80, #60a5fa)';
+                }, 2000);
+            }, 1500);
+        });
+    }
 
-// Intersection Observer for Animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-        }
-    });
-}, observerOptions);
-
-// Observe elements for animation
-document.querySelectorAll('.glass-card, h2, h3, .skill-tag').forEach(el => {
-    observer.observe(el);
-});
-
-// Add CSS for animations if not already present
-if (!document.querySelector('#animation-styles')) {
-    const style = document.createElement('style');
-    style.id = 'animation-styles';
-    style.textContent = `
-        .animate-spin {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
+    // Intersection Observer for Animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fade-in');
             }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    `;
-    document.head.appendChild(style);
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    // Observe elements
+    document.querySelectorAll('h2, h3, .skill-tag').forEach(el => observer.observe(el));
 }
