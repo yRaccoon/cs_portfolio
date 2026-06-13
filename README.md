@@ -3,7 +3,7 @@
 [![Live Demo](https://img.shields.io/badge/Live_Demo-View_Here-4ade80?style=for-the-badge&logo=github&logoColor=white)](https://yraccoon.github.io/cs_portfolio/)
 [![GitHub Pages](https://img.shields.io/badge/Hosted_on-GitHub_Pages-black?style=for-the-badge&logo=github)](https://pages.github.com/)
 
-A modern, responsive portfolio website for a Computer Engineering student and software developer.
+A modern, responsive portfolio website for a Computer Engineering graduate and software developer.
 ## 🚀 Built With
 - **HTML** – structure and content  
 - **CSS** – custom styling  
