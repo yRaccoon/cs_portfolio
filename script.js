@@ -173,6 +173,7 @@ function initializeEventListeners() {
 
     // Load More Projects with Enhanced Animations
     if (DOM.loadMoreBtn) {
+        // Get ALL project cards that should be hidden initially
         const hiddenProjects = Array.from(document.querySelectorAll('.hidden-project'));
         
         // Create ripple effect
@@ -196,7 +197,9 @@ function initializeEventListeners() {
         }
         
         const updateButtonText = () => {
-            const remaining = hiddenProjects.length - (projectsLoaded - 3);
+            // Count projects that still have the 'hidden' class
+            const remaining = hiddenProjects.filter(p => p.classList.contains('hidden')).length;
+        
             if (remaining <= 0) {
                 DOM.loadMoreBtn.innerHTML = `
                     <span>All Projects Loaded</span>
@@ -210,13 +213,13 @@ function initializeEventListeners() {
                     <span>Load More Projects (${remaining} remaining)</span>
                     <i data-lucide="chevron-down" class="w-5 h-5 group-hover:animate-bounce"></i>
                 `;
-                // Add subtle pulse animation to button
                 DOM.loadMoreBtn.classList.add('pulse-glow');
+                DOM.loadMoreBtn.disabled = false;
             }
             lucide.createIcons();
         };
 
-        // Add click animation to button
+        // Add click handler
         DOM.loadMoreBtn.addEventListener('click', function(e) {
             createRipple(e);
             
@@ -226,8 +229,15 @@ function initializeEventListeners() {
                 DOM.loadMoreBtn.classList.remove('button-click');
             }, 300);
             
+            // Get currently hidden projects (still have the 'hidden' class)
+            const currentlyHidden = hiddenProjects.filter(p => p.classList.contains('hidden'));
+            
+            if (currentlyHidden.length === 0) {
+                updateButtonText();
+                return;
+            }
+            
             // Add loading state
-            const originalHTML = DOM.loadMoreBtn.innerHTML;
             DOM.loadMoreBtn.innerHTML = `
                 <i data-lucide="loader" class="w-5 h-5 animate-spin"></i>
                 Loading Projects...
@@ -240,13 +250,15 @@ function initializeEventListeners() {
             
             // Simulate loading delay
             setTimeout(() => {
-                const toShow = hiddenProjects.slice(projectsLoaded - 3, projectsLoaded - 3 + PROJECTS_PER_LOAD);
+                // Take only the first 3 hidden projects
+                const toShow = currentlyHidden.slice(0, PROJECTS_PER_LOAD);
                 
                 // Animate each project sequentially
                 toShow.forEach((project, index) => {
                     setTimeout(() => {
+                        // Remove the 'hidden' class and add 'show'
                         project.classList.remove('hidden');
-                        project.classList.add('show', 'project-reveal');
+                        project.classList.add('show');
                         
                         // Add subtle stagger effect
                         project.style.animationDelay = `${index * 0.1}s`;
@@ -262,28 +274,35 @@ function initializeEventListeners() {
                     }, index * 150);
                 });
                 
+                // Update projectsLoaded counter
                 projectsLoaded += toShow.length;
-                updateButtonText();
                 
-                // Remove loading state
-                DOM.loadMoreBtn.classList.remove('load-more-loading');
-                
-                // Scroll to newly loaded projects with delay
-                if (toShow.length > 0) {
-                    setTimeout(() => {
-                        toShow[toShow.length - 1].scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'nearest',
-                            inline: 'nearest'
-                        });
-                        
-                        // Add a subtle highlight effect to the last project
-                        toShow[toShow.length - 1].classList.add('highlight-new');
+                // Update button text after all projects are shown
+                setTimeout(() => {
+                    updateButtonText();
+                    
+                    // Remove loading state
+                    DOM.loadMoreBtn.classList.remove('load-more-loading');
+                    DOM.loadMoreBtn.disabled = false;
+                    
+                    // Scroll to newly loaded projects with delay
+                    if (toShow.length > 0) {
                         setTimeout(() => {
-                            toShow[toShow.length - 1].classList.remove('highlight-new');
-                        }, 2000);
-                    }, toShow.length * 150 + 300);
-                }
+                            toShow[toShow.length - 1].scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'nearest',
+                                inline: 'nearest'
+                            });
+                            
+                            // Add a subtle highlight effect to the last project
+                            toShow[toShow.length - 1].classList.add('highlight-new');
+                            setTimeout(() => {
+                                toShow[toShow.length - 1].classList.remove('highlight-new');
+                            }, 2000);
+                        }, toShow.length * 150 + 300);
+                    }
+                }, toShow.length * 150 + 200);
+                
             }, 1200);
         });
         
@@ -302,7 +321,8 @@ function initializeEventListeners() {
             }
         });
         
-        updateButtonText();
+        // Initialize button text on page load
+        setTimeout(updateButtonText, 100);
     }
 
     // Download Resume
