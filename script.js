@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         typewriter = new Typewriter(DOM.typewriterElement, [
             "Web Developer",
             "Software Developer", 
-            "Computer Engineering Student",
+            "Computer Engineer",
             "UI/UX Enthusiast",
             "Problem Solver",
             "Tech Innovator"
