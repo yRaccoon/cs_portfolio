@@ -81,6 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "Web Developer",
             "Software Developer", 
             "Computer Engineer",
+            "Full-Stack Developer",
+            "React Developer",
             "UI/UX Enthusiast",
             "Problem Solver",
             "Tech Innovator"
