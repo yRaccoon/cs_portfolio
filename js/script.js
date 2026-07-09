@@ -433,6 +433,47 @@ function initializeEventListeners() {
         });
     }
 
+    // Active Navigation Link on Scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const mobileNavLinks = document.querySelectorAll('.mobile-link');
+
+    function updateActiveNavLink() {
+        const scrollPos = window.scrollY + 150; // offset for navbar height
+
+        let currentSection = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionBottom = sectionTop + section.offsetHeight;
+            if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+
+        // Update desktop nav links
+        navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${currentSection}`);
+        });
+
+        // Update mobile nav links
+        mobileNavLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${currentSection}`);
+        });
+    }
+
+    // Run on scroll (throttled) and on page load
+    let navScrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (navScrollTimeout) return;
+        navScrollTimeout = setTimeout(() => {
+            updateActiveNavLink();
+            navScrollTimeout = null;
+        }, 50);
+    });
+
+    // Run on page load and after any dynamic content changes
+    updateActiveNavLink();
+
     // Intersection Observer for Animations
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
