@@ -1,488 +1,240 @@
-// Initialize Lucide Icons
-lucide.createIcons();
+/* =========================================================
+   cs_portfolio — Coffee Shop Theme Interactions
+   ========================================================= */
 
 // DOM Elements
 const DOM = {
     navbar: document.getElementById('navbar'),
-    mobileBtn: document.getElementById('mobile-menu-btn'),
+    menuBtn: document.getElementById('menu-btn'),
+    menuIcon: document.getElementById('menu-icon'),
     mobileMenu: document.getElementById('mobile-menu'),
-    loadMoreBtn: document.getElementById('load-more'),
-    contactForm: document.querySelector('contact-form'),
-    downloadResumeBtn: document.getElementById('download-resume'),
-    typewriterElement: document.getElementById('typewriter')
+    typewriterElement: document.getElementById('typewriter'),
+    contactForm: document.getElementById('contact-form'),
+    submitBtn: document.getElementById('submit-btn'),
+    toast: document.getElementById('toast'),
+    toastText: document.getElementById('toast-text')
 };
 
-// Constants
-const RESUME_PATH = 'assets/profile/cs_resume.pdf';
-const PROJECTS_PER_LOAD = 3;
-let projectsLoaded = 3;
+/* ----------------------------------------------------
+ * 1. Typewriter Effect
+ * ---------------------------------------------------- */
+const typewriterPhrases = [
+    "Computer Engineer.",
+    "Software Developer.",
+    "Python Developer.",
+    "Web Developer.",
+    "Problem Solver."
+];
 
-// Typewriter Effect
-class Typewriter {
-    constructor(el, phrases, delay = 1500) {
-        this.el = el;
-        this.phrases = phrases;
-        this.delay = delay;
-        this.currentPhrase = 0;
-        this.currentChar = 0;
-        this.isDeleting = false;
-        this.timeout = null;
-        this.isRunning = true;
-        
-        this.type();
+let phraseIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+
+function typeWriter() {
+    if (!DOM.typewriterElement) return;
+
+    const currentPhrase = typewriterPhrases[phraseIndex];
+
+    if (isDeleting) {
+        DOM.typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+    } else {
+        DOM.typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
     }
 
-    type() {
-        if (!this.isRunning || !this.el) return;
-        
-        const fullText = this.phrases[this.currentPhrase];
-        
-        if (this.isDeleting) {
-            // Delete one character
-            this.el.textContent = fullText.substring(0, this.currentChar - 1);
-            this.currentChar--;
-        } else {
-            // Add one character
-            this.el.textContent = fullText.substring(0, this.currentChar + 1);
-            this.currentChar++;
-        }
+    let typeSpeed = isDeleting ? 40 : 90;
 
-        let typeSpeed = this.isDeleting ? 50 : 100;
-
-        // If we've reached the end of the current phrase
-        if (!this.isDeleting && this.currentChar === fullText.length) {
-            typeSpeed = this.delay; // Pause at full phrase
-            this.isDeleting = true;
-        } 
-        // If we've deleted everything
-        else if (this.isDeleting && this.currentChar === 0) {
-            this.isDeleting = false;
-            this.currentPhrase = (this.currentPhrase + 1) % this.phrases.length;
-            typeSpeed = 500; // Pause before starting next phrase
-        }
-
-        this.timeout = setTimeout(() => this.type(), typeSpeed);
+    if (!isDeleting && charIndex === currentPhrase.length) {
+        typeSpeed = 1800; // Pause at end of phrase
+        isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % typewriterPhrases.length;
+        typeSpeed = 400; // Pause before typing next phrase
     }
 
-    destroy() {
-        this.isRunning = false;
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-            this.timeout = null;
-        }
-    }
+    setTimeout(typeWriter, typeSpeed);
 }
 
-// Initialize on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-    let typewriter;
-    if (DOM.typewriterElement) {
-        typewriter = new Typewriter(DOM.typewriterElement, [
-            "Web Developer",
-            "Software Developer", 
-            "Computer Engineer",
-            "Full-Stack Developer",
-            "React Developer",
-            "UI/UX Enthusiast",
-            "Problem Solver",
-            "Tech Innovator"
-        ], 1500);
-    }
-    
-    // Project hover effects
-    document.querySelectorAll('.project-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-10px)';
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0)';
+/* ----------------------------------------------------
+ * 2. Mobile Menu Drawer Toggle
+ * ---------------------------------------------------- */
+if (DOM.menuBtn && DOM.mobileMenu && DOM.menuIcon) {
+    DOM.menuBtn.addEventListener('click', () => {
+        DOM.mobileMenu.classList.toggle('hidden');
+        if (DOM.mobileMenu.classList.contains('hidden')) {
+            DOM.menuIcon.classList.remove('fa-xmark');
+            DOM.menuIcon.classList.add('fa-bars');
+        } else {
+            DOM.menuIcon.classList.remove('fa-bars');
+            DOM.menuIcon.classList.add('fa-xmark');
+        }
+    });
+
+    // Close mobile drawer on clicking any nav link
+    document.querySelectorAll('.mobile-link').forEach(link => {
+        link.addEventListener('click', () => {
+            DOM.mobileMenu.classList.add('hidden');
+            DOM.menuIcon.classList.remove('fa-xmark');
+            DOM.menuIcon.classList.add('fa-bars');
         });
     });
-    
-    // Initialize observers
-    initializeEventListeners();
-    
-    // Cleanup when page unloads
-    window.addEventListener('beforeunload', () => {
-        if (typewriter) typewriter.destroy();
-        observer.disconnect();
+}
+
+/* ----------------------------------------------------
+ * 3. Projects Category Filter
+ * ---------------------------------------------------- */
+const filterBtns = document.querySelectorAll('.project-filter-btn');
+const projectCards = document.querySelectorAll('#projects-container .project-card');
+
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Remove active styling from all buttons
+        filterBtns.forEach(b => {
+            b.classList.remove('bg-espresso', 'text-cream', 'bg-gradient-to-r', 'from-latte', 'to-caramel', 'shadow-md', 'font-bold');
+            b.classList.add('text-roast', 'hover:bg-cream', 'font-medium');
+        });
+
+        // Add active styling to clicked button
+        btn.classList.add('bg-gradient-to-r', 'from-latte', 'to-caramel', 'shadow-md', 'font-bold');
+        btn.classList.remove('hover:bg-cream', 'font-medium');
+
+        const filter = btn.getAttribute('data-filter');
+
+        projectCards.forEach(card => {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
     });
 });
 
-// Loading Animation
-function showLoadingAnimation() {
-    const loadingBar = document.createElement('div');
-    loadingBar.className = 'loading-bar';
-    document.body.appendChild(loadingBar);
-    
-    setTimeout(() => {
-        loadingBar.remove();
-    }, 2000);
+/* ----------------------------------------------------
+ * 4. Contact Form — Formspree AJAX with Toast
+ * ---------------------------------------------------- */
+if (DOM.contactForm) {
+    DOM.contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(DOM.contactForm);
+        const submitBtn = DOM.submitBtn;
+
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Sending...`;
+
+        try {
+            const response = await fetch(DOM.contactForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                DOM.toastText.textContent = 'Thank you! Your message has been sent. I\'ll get back to you soon.';
+                DOM.contactForm.reset();
+            } else {
+                setToastError();
+            }
+        } catch (error) {
+            setToastError();
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>Send Message</span> <i class="fa-solid fa-paper-plane text-xs"></i>`;
+        DOM.toast.classList.remove('hidden');
+
+        setTimeout(() => {
+            DOM.toast.classList.add('hidden');
+            resetToast();
+        }, 5000);
+    });
 }
 
-// Initialize all event listeners
-function initializeEventListeners() {
-    // Navbar Scroll Effect with Throttle
-    let scrollTimeout;
-    window.addEventListener('scroll', () => {
-        if (scrollTimeout) return;
-        
-        scrollTimeout = setTimeout(() => {
-            if (window.scrollY > 50) {
-                DOM.navbar.classList.add('glass', 'shadow-lg', 'border-white/10');
-                DOM.navbar.classList.remove('border-transparent');
-            } else {
-                DOM.navbar.classList.remove('glass', 'shadow-lg', 'border-white/10');
-                DOM.navbar.classList.add('border-transparent');
-            }
-            scrollTimeout = null;
-        }, 100);
-    });
+function setToastError() {
+    DOM.toastText.textContent = 'Something went wrong. Please try again or email me directly.';
+    DOM.toast.classList.remove('bg-emerald-100', 'border-emerald-300', 'text-emerald-800');
+    DOM.toast.classList.add('bg-red-100', 'border-red-300', 'text-red-800');
+}
 
-    // Mobile Menu Toggle
-    if (DOM.mobileBtn && DOM.mobileMenu) {
-        DOM.mobileBtn.addEventListener('click', () => {
-            DOM.mobileMenu.classList.toggle('hidden');
-            const icon = DOM.mobileBtn.querySelector('i');
-            icon.setAttribute('data-lucide', DOM.mobileMenu.classList.contains('hidden') ? 'menu' : 'x');
-            lucide.createIcons();
-        });
+function resetToast() {
+    DOM.toast.classList.add('bg-emerald-100', 'border-emerald-300', 'text-emerald-800');
+    DOM.toast.classList.remove('bg-red-100', 'border-red-300', 'text-red-800');
+}
 
-        document.querySelectorAll('.mobile-link').forEach(link => {
-            link.addEventListener('click', () => {
-                DOM.mobileMenu.classList.add('hidden');
-                DOM.mobileBtn.querySelector('i').setAttribute('data-lucide', 'menu');
-                lucide.createIcons();
-            });
-        });
-    }
+/* ----------------------------------------------------
+ * 6. Navbar Scroll Effect
+ * ---------------------------------------------------- */
+window.addEventListener('scroll', () => {
+    if (!DOM.navbar) return;
+    // The coffee navbar is already glass; add a subtle shadow on scroll
+    DOM.navbar.classList.toggle('shadow-lg', window.scrollY > 20);
+});
 
-    // Smooth Scrolling
-    document.addEventListener('click', (e) => {
-        const anchor = e.target.closest('a[href^="#"]');
-        if (!anchor || anchor.getAttribute('href') === '#') return;
-        
-        e.preventDefault();
-        const targetElement = document.querySelector(anchor.getAttribute('href'));
-        if (targetElement) {
-            window.scrollTo({
-                top: targetElement.offsetTop - 80,
-                behavior: 'smooth'
-            });
+/* ----------------------------------------------------
+ * 7. Active Navigation Link on Scroll
+ * ---------------------------------------------------- */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+const mobileNavLinks = document.querySelectorAll('.mobile-link');
+
+function updateActiveNavLink() {
+    const scrollPos = window.scrollY + 160; // offset for navbar height
+
+    let currentSection = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionBottom = sectionTop + section.offsetHeight;
+        if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+            currentSection = section.getAttribute('id');
         }
     });
 
-    // Load More Projects with Enhanced Animations
-    if (DOM.loadMoreBtn) {
-        // Get ALL project cards that should be hidden initially
-        const hiddenProjects = Array.from(document.querySelectorAll('.hidden-project'));
-        
-        // Create ripple effect
-        function createRipple(event) {
-            const button = event.currentTarget;
-            const circle = document.createElement("span");
-            const diameter = Math.max(button.clientWidth, button.clientHeight);
-            const radius = diameter / 2;
-            
-            circle.style.width = circle.style.height = `${diameter}px`;
-            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
-            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
-            circle.classList.add("ripple");
-            
-            const ripple = button.getElementsByClassName("ripple")[0];
-            if (ripple) {
-                ripple.remove();
-            }
-            
-            button.appendChild(circle);
-        }
-        
-        const updateButtonText = () => {
-            // Count projects that still have the 'hidden' class
-            const remaining = hiddenProjects.filter(p => p.classList.contains('hidden')).length;
-        
-            if (remaining <= 0) {
-                DOM.loadMoreBtn.innerHTML = `
-                    <span>All Projects Loaded</span>
-                    <i data-lucide="check" class="w-5 h-5"></i>
-                `;
-                DOM.loadMoreBtn.disabled = true;
-                DOM.loadMoreBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                DOM.loadMoreBtn.classList.remove('pulse-glow');
-            } else {
-                DOM.loadMoreBtn.innerHTML = `
-                    <span>Load More Projects (${remaining} remaining)</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 group-hover:animate-bounce"></i>
-                `;
-                DOM.loadMoreBtn.classList.add('pulse-glow');
-                DOM.loadMoreBtn.disabled = false;
-            }
-            lucide.createIcons();
-        };
-
-        // Add click handler
-        DOM.loadMoreBtn.addEventListener('click', function(e) {
-            createRipple(e);
-            
-            // Button click animation
-            DOM.loadMoreBtn.classList.add('button-click');
-            setTimeout(() => {
-                DOM.loadMoreBtn.classList.remove('button-click');
-            }, 300);
-            
-            // Get currently hidden projects (still have the 'hidden' class)
-            const currentlyHidden = hiddenProjects.filter(p => p.classList.contains('hidden'));
-            
-            if (currentlyHidden.length === 0) {
-                updateButtonText();
-                return;
-            }
-            
-            // Add loading state
-            DOM.loadMoreBtn.innerHTML = `
-                <i data-lucide="loader" class="w-5 h-5 animate-spin"></i>
-                Loading Projects...
-            `;
-            DOM.loadMoreBtn.disabled = true;
-            DOM.loadMoreBtn.classList.add('load-more-loading');
-            
-            // Show loading animation
-            showLoadingAnimation();
-            
-            // Simulate loading delay
-            setTimeout(() => {
-                // Take only the first 3 hidden projects
-                const toShow = currentlyHidden.slice(0, PROJECTS_PER_LOAD);
-                
-                // Animate each project sequentially
-                toShow.forEach((project, index) => {
-                    setTimeout(() => {
-                        // Remove the 'hidden' class and add 'show'
-                        project.classList.remove('hidden');
-                        project.classList.add('show');
-                        
-                        // Add subtle stagger effect
-                        project.style.animationDelay = `${index * 0.1}s`;
-                        
-                        // Add a subtle glow effect on reveal
-                        const cardContent = project.querySelector('.glass-card');
-                        if (cardContent) {
-                            cardContent.style.boxShadow = '0 0 30px rgba(74, 222, 128, 0.3)';
-                            setTimeout(() => {
-                                cardContent.style.boxShadow = '';
-                            }, 1000);
-                        }
-                    }, index * 150);
-                });
-                
-                // Update projectsLoaded counter
-                projectsLoaded += toShow.length;
-                
-                // Update button text after all projects are shown
-                setTimeout(() => {
-                    updateButtonText();
-                    
-                    // Remove loading state
-                    DOM.loadMoreBtn.classList.remove('load-more-loading');
-                    DOM.loadMoreBtn.disabled = false;
-                    
-                    // Scroll to newly loaded projects with delay
-                    if (toShow.length > 0) {
-                        setTimeout(() => {
-                            toShow[toShow.length - 1].scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'nearest',
-                                inline: 'nearest'
-                            });
-                            
-                            // Add a subtle highlight effect to the last project
-                            toShow[toShow.length - 1].classList.add('highlight-new');
-                            setTimeout(() => {
-                                toShow[toShow.length - 1].classList.remove('highlight-new');
-                            }, 2000);
-                        }, toShow.length * 150 + 300);
-                    }
-                }, toShow.length * 150 + 200);
-                
-            }, 1200);
-        });
-        
-        // Add hover effect to button
-        DOM.loadMoreBtn.addEventListener('mouseenter', () => {
-            if (!DOM.loadMoreBtn.disabled) {
-                DOM.loadMoreBtn.style.transform = 'translateY(-2px)';
-                DOM.loadMoreBtn.style.boxShadow = '0 10px 25px rgba(74, 222, 128, 0.3)';
-            }
-        });
-        
-        DOM.loadMoreBtn.addEventListener('mouseleave', () => {
-            if (!DOM.loadMoreBtn.disabled) {
-                DOM.loadMoreBtn.style.transform = 'translateY(0)';
-                DOM.loadMoreBtn.style.boxShadow = '';
-            }
-        });
-        
-        // Initialize button text on page load
-        setTimeout(updateButtonText, 100);
-    }
-
-    // Download Resume
-    if (DOM.downloadResumeBtn) {
-        DOM.downloadResumeBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            
-            const originalHTML = DOM.downloadResumeBtn.innerHTML;
-            DOM.downloadResumeBtn.innerHTML = `
-                <i data-lucide="loader" class="w-5 h-5 animate-spin"></i>
-                Downloading...
-            `;
-            DOM.downloadResumeBtn.disabled = true;
-            
-            try {
-                // Check if file exists
-                const response = await fetch(RESUME_PATH);
-                if (!response.ok) throw new Error('File not found');
-                
-                // Trigger download
-                const link = document.createElement('a');
-                link.href = RESUME_PATH;
-                link.download = 'Clarence_Sioson_Resume.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Success state
-                DOM.downloadResumeBtn.innerHTML = `
-                    <i data-lucide="check" class="w-5 h-5"></i>
-                    Resume Downloaded!
-                `;
-                
-                setTimeout(() => {
-                    DOM.downloadResumeBtn.innerHTML = originalHTML;
-                    DOM.downloadResumeBtn.disabled = false;
-                    lucide.createIcons();
-                }, 2000);
-                
-            } catch (error) {
-                console.error('Download error:', error);
-                DOM.downloadResumeBtn.innerHTML = `
-                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                    File Not Found
-                `;
-                DOM.downloadResumeBtn.classList.add('text-red-400');
-                
-                setTimeout(() => {
-                    DOM.downloadResumeBtn.innerHTML = originalHTML;
-                    DOM.downloadResumeBtn.disabled = false;
-                    DOM.downloadResumeBtn.classList.remove('text-red-400');
-                    lucide.createIcons();
-                }, 2000);
-                
-                alert('Resume file not found. Please try again later.');
-            }
-        });
-    }
-
-    // Contact Form
-    if (DOM.contactForm) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
-        DOM.contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-            
-            // Validation
-            if (!name || !email || !message) {
-                alert('Please fill in all required fields');
-                return;
-            }
-            
-            if (!emailRegex.test(email)) {
-                alert('Please enter a valid email address');
-                return;
-            }
-            
-            const submitBtn = DOM.contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            
-            submitBtn.textContent = 'Sending...';
-            submitBtn.disabled = true;
-            
-            // Simulate sending
-            setTimeout(() => {
-                console.log('Contact Form Submission:', {
-                    name, email, subject, message,
-                    timestamp: new Date().toISOString()
-                });
-                
-                submitBtn.textContent = 'Message Sent!';
-                submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-                DOM.contactForm.reset();
-                
-                setTimeout(() => {
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    submitBtn.style.background = 'linear-gradient(135deg, #4ade80, #60a5fa)';
-                }, 2000);
-            }, 1500);
-        });
-    }
-
-    // Active Navigation Link on Scroll
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const mobileNavLinks = document.querySelectorAll('.mobile-link');
-
-    function updateActiveNavLink() {
-        const scrollPos = window.scrollY + 150; // offset for navbar height
-
-        let currentSection = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionBottom = sectionTop + section.offsetHeight;
-            if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
-                currentSection = section.getAttribute('id');
-            }
-        });
-
-        // Update desktop nav links
-        navLinks.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('href') === `#${currentSection}`);
-        });
-
-        // Update mobile nav links
-        mobileNavLinks.forEach(link => {
-            link.classList.toggle('active', link.getAttribute('href') === `#${currentSection}`);
-        });
-    }
-
-    // Run on scroll (throttled) and on page load
-    let navScrollTimeout;
-    window.addEventListener('scroll', () => {
-        if (navScrollTimeout) return;
-        navScrollTimeout = setTimeout(() => {
-            updateActiveNavLink();
-            navScrollTimeout = null;
-        }, 50);
+    navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${currentSection}`);
     });
 
-    // Run on page load and after any dynamic content changes
-    updateActiveNavLink();
+    mobileNavLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${currentSection}`);
+    });
+}
 
-    // Intersection Observer for Animations
-    const observer = new IntersectionObserver((entries) => {
+window.addEventListener('scroll', () => {
+    requestAnimationFrame(updateActiveNavLink);
+});
+
+/* ----------------------------------------------------
+ * 8. Skill Bars — Animate on Scroll
+ * ---------------------------------------------------- */
+if ('IntersectionObserver' in window) {
+    const skillBars = document.querySelectorAll('.skill-fill');
+
+    const skillObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fade-in');
+                entry.target.style.width = entry.target.dataset.width || '0%';
+                skillObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.3 });
 
-    // Observe elements
-    document.querySelectorAll('h2, h3, .skill-tag').forEach(el => observer.observe(el));
+    skillBars.forEach(bar => {
+        bar.dataset.width = bar.style.width;
+        bar.style.width = '0%';
+        skillObserver.observe(bar);
+    });
 }
+
+/* ----------------------------------------------------
+ * Init
+ * ---------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+    if (DOM.typewriterElement) {
+        setTimeout(typeWriter, 500);
+    }
+    updateActiveNavLink();
+});
+// (legacy load-more / resume / contact / observer logic removed for coffee theme)
