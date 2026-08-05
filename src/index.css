@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+/* =========================================================
+   Coffee Shop Theme — Tailwind v4 design tokens
+   ========================================================= */
+@theme {
+  --color-roast: #23120B;       /* Deepest dark roast */
+  --color-espresso: #3E2723;    /* Rich espresso */
+  --color-coffee: #6F4E37;      /* Classic coffee brown */
+  --color-latte: #C49A6C;       /* Warm latte amber */
+  --color-caramel: #D4A373;     /* Soft golden caramel */
+  --color-foam: #EAE0D5;        /* Light foam cream */
+  --color-cream: #FAEDCD;       /* Light warm cream */
+  --color-creamlite: #FFF9F0;   /* Soft background canvas */
+
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-hand: "Caveat", cursive;
+
+  --animate-float-slow: float 8s ease-in-out infinite;
+  --animate-float-medium: float 5s ease-in-out infinite alternate;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spin-slow: spin 20s linear infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(3deg); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+}
+
+/* ===== BASE ===== */
+@layer base {
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #23120B;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #6F4E37;
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #C49A6C;
+  }
+
+  /* Section anchor offset for fixed navbar */
+  section[id] {
+    scroll-margin-top: 90px;
+  }
+
+  /* Keyboard focus */
+  :focus-visible {
+    outline: 2px solid #C49A6C;
+    outline-offset: 2px;
+  }
+
+  /* Reduced motion kill-switch */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ===== COMPONENTS ===== */
+@layer components {
+  /* Glassmorphism utilities */
+  .glass-coffee {
+    background: rgba(62, 39, 35, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(196, 154, 108, 0.2);
+  }
+
+  .glass-light {
+    background: rgba(255, 249, 240, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(196, 154, 108, 0.3);
+  }
+
+  /* Typewriter cursor */
+  .typewriter-cursor {
+    display: inline-block;
+    width: 3px;
+    background-color: #C49A6C;
+    margin-left: 3px;
+    animation: blink 0.8s infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Swirling latte art background */
+  .latte-art-bg {
+    background-color: #23120B;
+    background-image:
+      radial-gradient(at 0% 0%, rgba(111, 78, 55, 0.4) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(196, 154, 108, 0.25) 0px, transparent 50%),
+      radial-gradient(at 50% 50%, rgba(62, 39, 35, 0.7) 0px, transparent 70%);
+  }
+
+  /* Organic crema blob gradients */
+  .crema-blob-1 {
+    background: radial-gradient(circle, rgba(196, 154, 108, 0.2) 0%, rgba(111, 78, 55, 0.05) 70%, transparent 100%);
+    filter: blur(40px);
+  }
+
+  .crema-blob-2 {
+    background: radial-gradient(circle, rgba(212, 163, 115, 0.18) 0%, rgba(35, 18, 11, 0.05) 70%, transparent 100%);
+    filter: blur(50px);
+  }
+
+  /* Skill bar gradient */
+  .skill-fill {
+    background: linear-gradient(90deg, #6F4E37 0%, #C49A6C 100%);
+    transition: width 1.2s cubic-bezier(0.1, 0.5, 0.1, 1);
+  }
+
+  /* Active nav link */
+  .nav-link.active {
+    color: #C49A6C !important;
+    position: relative;
+  }
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: #C49A6C;
+    border-radius: 1px;
+  }
+
+  .mobile-link.active {
+    color: #C49A6C !important;
+  }
+
+  /* Scroll reveal */
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
