@@ -4,6 +4,11 @@ import {
   faMicrochip,
   faFlask,
   faChartSimple,
+  faChartLine,
+  faTable,
+  faDatabase,
+  faCode,
+  faWind
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faPython,
@@ -11,6 +16,7 @@ import {
   faReact,
   faNodeJs,
   faGitAlt,
+  faCss3Alt
 } from '@fortawesome/free-brands-svg-icons'
 
 /**
@@ -53,15 +59,31 @@ export const skillCategories = [
 ]
 
 /**
- * Skill badge quick-list.
+ * Skill badge quick-list.:
+ * Languages · Frameworks & Libraries · Data & Analytics · Tools & Platforms.
  */
 export const skillBadges = [
+  // Languages
   { icon: faPython, label: 'Python', colorClass: 'text-amber-600' },
   { icon: faSquareJs, label: 'JavaScript', colorClass: 'text-yellow-500' },
+  { icon: faCode, label: 'HTML', colorClass: 'text-orange-500' },
+  { icon: faCss3Alt, label: 'CSS', colorClass: 'text-blue-600' },
+
+  // Frameworks & Libraries
   { icon: faReact, label: 'React', colorClass: 'text-sky-500' },
   { icon: faNodeJs, label: 'Node.js', colorClass: 'text-emerald-600' },
-  { icon: faMicrochip, label: 'Arduino', colorClass: 'text-coffee' },
+  { icon: faServer, label: 'Express', colorClass: 'text-gray-600' },
   { icon: faFlask, label: 'Flask', colorClass: 'text-latte' },
+  { icon: faCode, label: 'jQuery', colorClass: 'text-blue-500' },
+  { icon: faWind, label: 'TailwindCSS', colorClass: 'text-cyan-500' },
+
+  // Data & Analytics
+  { icon: faTable, label: 'pandas', colorClass: 'text-purple-500' },
+  { icon: faChartLine, label: 'matplotlib', colorClass: 'text-blue-500' },
   { icon: faChartSimple, label: 'Power BI', colorClass: 'text-coffee' },
+  { icon: faDatabase, label: 'MSSQL', colorClass: 'text-red-600' },
+
+  // Tools & Platforms
   { icon: faGitAlt, label: 'Git', colorClass: 'text-orange-600' },
+  { icon: faMicrochip, label: 'Arduino', colorClass: 'text-coffee' },
 ]
