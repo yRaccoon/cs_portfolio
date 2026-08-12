@@ -72,9 +72,9 @@ export default function HeroSection() {
 
           {/* Main Heading */}
           <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-creamlite leading-tight">
-            Engineered Solutions, <br className="hidden sm:inline" />
+            Debugging my life, <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-latte via-caramel to-foam bg-clip-text text-transparent">
-              Freshly Brewed.
+              one coffee at a time.
             </span>
           </h1>
 
