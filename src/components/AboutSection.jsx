@@ -98,9 +98,6 @@ export default function AboutSection() {
                 </p>
                 <h4 className="font-serif text-xl font-bold text-cream">At A Glance</h4>
               </div>
-              <span className="px-3 py-1 rounded-full bg-latte/20 text-latte text-xs font-mono">
-                Status: Ready to Hire
-              </span>
             </div>
 
             <ul className="space-y-4 text-sm font-light">

@@ -37,21 +37,6 @@
 
 /* ===== BASE ===== */
 @layer base {
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #23120B;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #6F4E37;
-    border-radius: 5px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #C49A6C;
-  }
-
   /* Section anchor offset for fixed navbar */
   section[id] {
     scroll-margin-top: 90px;
